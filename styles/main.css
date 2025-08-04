@@ -5,8 +5,6 @@ body {
     text-align: center;
 }
 
-/* styles/main.css */
-
 /* General Header Styles */
 header {
   display: flex;
@@ -75,7 +73,7 @@ nav a:hover, nav a:focus {
 }
 
 .search-bar button {
-  background: #5864f2;
+  background: #6dd3ef;
   border: none;
   color: #fff;
   font-size: 1.15rem;
@@ -91,7 +89,7 @@ nav a:hover, nav a:focus {
 
 .search-bar button:hover,
 .search-bar button:focus {
-  background: #4855c1;
+  background: #73d8f9;
   outline: none;
 }
 
@@ -99,14 +97,14 @@ nav a:hover, nav a:focus {
 .cart-icon {
   position: relative;
   font-size: 1.62rem;
-  color: #515c6f;
+  color: #6defed;
   margin-left: 22px;
   cursor: pointer;
   transition: color 0.2s;
 }
 .cart-icon:hover,
 .cart-icon:focus {
-  color: #3742fa;
+  color: #f088c1;
   outline: none;
 }
 

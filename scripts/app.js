@@ -1,5 +1,4 @@
 //console.log("E-Commerce Website Loaded");
-// scripts/app.js
 
 // Select hamburger and navigation elements
 const hamburger = document.querySelector('.hamburger');
@@ -9,7 +8,7 @@ let navOpen = false;
 
 // Ensure nav is hidden on mobile by default (override inline in case of resize)
 function hideNavMobile() {
-  if (window.innerWidth <= 770) {
+  if (window.innerWidth <= 470) {
     nav.style.display = 'none';
     navOpen = false;
   } else {
