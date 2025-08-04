@@ -4,3 +4,260 @@ body {
     padding: 0;
     text-align: center;
 }
+
+/* styles/main.css */
+
+/* General Header Styles */
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 40px;
+  background: #fff;
+  border-bottom: 1px solid #eee;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+  position: relative;
+  z-index: 10;
+  min-height: 72px;
+}
+
+/* Logo */
+.logo {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #17223b;
+  letter-spacing: 1px;
+  text-decoration: none;
+}
+
+/* Navigation Bar */
+nav {
+  display: flex;
+  gap: 32px;
+}
+
+nav a {
+  text-decoration: none;
+  color: #515c6f;
+  font-size: 1.08rem;
+  font-weight: 500;
+  padding: 6px 10px;
+  border-radius: 4px;
+  transition: background 0.15s, color 0.15s;
+}
+
+nav a:hover, nav a:focus {
+  background: #eff3fa;
+  color: #17223b;
+  outline: none;
+}
+
+/* Search Bar */
+.search-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.search-bar input[type="text"] {
+  height: 38px;
+  width: 200px;
+  border: 1px solid #d2dae2;
+  border-radius: 20px;
+  padding: 0 18px;
+  font-size: 1rem;
+  transition: border 0.2s;
+  background: #f8fafc;
+}
+.search-bar input[type="text"]:focus {
+  border-color: #8697f5;
+  outline: none;
+}
+
+.search-bar button {
+  background: #5864f2;
+  border: none;
+  color: #fff;
+  font-size: 1.15rem;
+  border-radius: 50%;
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.18s;
+}
+
+.search-bar button:hover,
+.search-bar button:focus {
+  background: #4855c1;
+  outline: none;
+}
+
+/* Cart Icon and Badge */
+.cart-icon {
+  position: relative;
+  font-size: 1.62rem;
+  color: #515c6f;
+  margin-left: 22px;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.cart-icon:hover,
+.cart-icon:focus {
+  color: #3742fa;
+  outline: none;
+}
+
+.cart-badge {
+  position: absolute;
+  top: -8px;
+  right: -12px;
+  background: #e94444;
+  color: #fff;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  font-size: 0.96rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(31, 31, 31, 0.08);
+}
+
+/* Hamburger Menu Icon for Mobile */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+  margin-left: 28px;
+}
+.hamburger span {
+  width: 28px;
+  height: 3.5px;
+  background: #2d3436;
+  border-radius: 2px;
+  transition: background 0.2s;
+}
+
+/* Responsive Styles */
+@media (max-width: 900px) {
+  header {
+    flex-wrap: wrap;
+    padding: 12px 16px;
+    min-height: 56px;
+  }
+  .search-bar input[type="text"] {
+    width: 120px;
+  }
+}
+
+@media(max-width:500px){
+    .logo{
+        font-size: 1.5rem;
+    }
+    .search-bar input[type='text']{
+    width:100px;
+}
+    .cart-icon{
+        font-size: 1.4rem;
+        margin-left: 16px;
+    }
+}
+
+/* Responsive Styles for Navigation */
+@media (max-width: 480px) {
+  nav, /* Hide desktop nav links */
+  .search-bar { 
+    display: none;
+  }
+
+  .hamburger { /* Show hamburger icon */
+    display: flex;
+  }
+
+  header {
+    padding: 10px 14px;
+    min-height: 54px;
+  }
+
+  .logo {
+    font-size: 1.3rem;
+  }
+
+  .cart-icon {
+    margin-left: 10px;
+    font-size: 1.3rem;
+  }
+}
+
+.hero {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  background: linear-gradient(to bottom right, #311b92, #00c6ff), 
+              url('images/hero-bg.jpg') center/cover no-repeat;
+  color: #fff;
+  text-align: center;
+  position: relative;
+}
+.hero-content {
+  max-width: 600px;
+  padding: 48px 24px;
+}
+.hero h1 {
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+  letter-spacing: 1px;
+}
+.hero p {
+  font-size: 1.3rem;
+  margin-bottom: 32px;
+}
+.cta-btn {
+  display: inline-block;
+  padding: 16px 36px;
+  background: #fff;
+  color: #262626;
+  font-size: 1.15rem;
+  font-weight: bold;
+  border-radius: 30px;
+  text-decoration: none;
+  transition: background 0.16s, color 0.16s, box-shadow 0.22s;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+}
+.cta-btn:hover, .cta-btn:focus {
+  background: #00c6ff;
+  color: #fff;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.18);
+}
+
+@media (max-width: 600px) {
+  .hero-content {
+    padding: 24px 8px;
+  }
+  .hero h1 {
+    font-size: 2rem;
+  }
+  .cta-btn {
+    padding: 14px 24px;
+    font-size: 1rem;
+  }
+}
+
+.hero-content {
+  opacity: 0;
+  transform: translateY(28px);
+  animation: fadeInUp 1s 0.2s forwards;
+}
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

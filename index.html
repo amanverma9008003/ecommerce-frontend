@@ -8,8 +8,44 @@
 </head>
 <body>
     <header>
-        <h1>Welcome to Our Online Store</h1>
-    </header>
-    <script src="scripts/app.js"></script>
+    <!-- Logo -->
+    <a href="#" class="logo">ShopBrand</a>
+
+    <!-- Navigation Menu -->
+    <nav>
+    <a href="#">Home</a>
+    <a href="#">Products</a>
+    <a href="#">About</a>
+    <a href="#">Contact</a>
+    </nav>
+
+    <!-- Search Bar -->
+    <form class="search-bar" action="#" method="get">
+        <input type="text" placeholder="Search products…" name="search">
+        <button type="submit" aria-label="Search">🔍</button>
+    </form>
+
+    <!-- Shopping Cart Icon with Badge -->
+    <div class="cart-icon">
+        🛒
+        <span class="cart-badge">3</span>
+    </div>
+
+    <!-- Hamburger Menu Icon for Mobile -->
+    <div class="hamburger" aria-label="Open menu" tabindex="0">
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+</header>
+
+<section class="hero">
+    <div class="hero-content">
+    <h1>Biggest Sale of the Year!</h1>
+    <p>Up to 60% off on all new arrivals. Limited time only.</p>
+    <a href="#products" class="cta-btn">Shop Now</a>
+    </div>
+</section>
+<script src="scripts/app.js"></script>
 </body>
 </html>
