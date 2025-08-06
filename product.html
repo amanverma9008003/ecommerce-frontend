@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Product Detail</title>
+    <link rel="stylesheet" href="styles/main.css" />
+</head>
+<body>
+    <!-- Header & Navbar (reuse from main site) -->
+    <header>
+    <!-- Logo -->
+    <a href="#" class="logo">ShopBrand</a>
+
+    <!-- Navigation Menu -->
+    <nav>
+    <a href="#">Home</a>
+    <a href="#">Products</a>
+    <a href="#">About</a>
+    <a href="#">Contact</a>
+    </nav>
+
+    <!-- Search Bar -->
+    <form class="search-bar" action="#" method="get">
+        <input type="text" placeholder="Search products…" name="search">
+        <button type="submit" aria-label="Search">🔍</button>
+    </form>
+
+    <!-- Shopping Cart Icon with Badge -->
+    <div class="cart-icon">
+        🛒
+        <span class="cart-badge">3</span>
+    </div>
+
+    <!-- Hamburger Menu Icon for Mobile -->
+    <div class="hamburger" aria-label="Open menu" tabindex="0">
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+</header>
+
+
+<main>
+    <section class="product-detail">
+        <!-- Product details will be loaded here dynamically -->
+        <div id="product-container">Loading...</div>
+    </section>
+</main>
+<span class="cart-badge"></span>
+<!-- Footer -->
+<footer>...</footer>
+    <script src="scripts/product-detail.js"></script>
+    <script src="scripts/cart.js"></script>
+</body>
+</html>
