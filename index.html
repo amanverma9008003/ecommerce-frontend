@@ -7,59 +7,63 @@
     <link rel="stylesheet" href="styles/main.css">
 </head>
 <body>
-    <header>
+    <header class="site-header">
+  <div class="container header-content">
     <!-- Logo -->
-    <a href="#" class="logo">ShopBrand</a>
-
-    <!-- Navigation Menu -->
-    <nav>
-    <a href="#">Home</a>
-    <a href="#">Products</a>
-    <a href="#">About</a>
-    <a href="#">Contact</a>
+    <div class="logo">
+      <a href="#">ShopMate</a>
+    </div>
+    
+    <!-- Navigation Links -->
+    <nav class="navbar">
+      <ul class="nav-links">
+        <li><a href="#">Home</a></li>
+        <li><a href="#">Products</a></li>
+        <li><a href="#">About</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
     </nav>
-
-    <!-- Search Bar -->
-    <form class="search-bar" action="#" method="get">
-        <input type="text" placeholder="Search products…" name="search">
-        <button type="submit" aria-label="Search">🔍</button>
-    </form>
-
-    <!-- Shopping Cart Icon with Badge -->
-    <div class="cart-icon">
-        🛒
-        <span class="cart-badge">3</span>
+    
+    <!-- Search, Cart & Hamburger -->
+    <div class="header-actions">
+      <!-- Search Bar -->
+      <div class="search-bar">
+        <input type="text" placeholder="Search products..." />
+        <button class="search-btn">&#128269;</button> <!-- Search icon -->
+      </div>
+      <!-- Cart Icon -->
+      <div class="cart">
+        <div class="cart-icon">
+  🛒<span class="cart-badge" id="cart-count">0</span>
+        </div>
     </div>
 
-    <!-- Hamburger Menu Icon for Mobile -->
-    <div class="hamburger" aria-label="Open menu" tabindex="0">
+      </div>
+      <!-- Hamburger Icon for mobile -->
+      <button class="hamburger" id="hamburger-menu" aria-label="Toggle navigation">
         <span></span>
         <span></span>
         <span></span>
+      </button>
     </div>
+  </div>
 </header>
 
-<section class="hero">
-    <div class="hero-content">
-    <h1>Biggest Sale of the Year!</h1>
-    <p>Up to 60% off on all new arrivals. Limited time only.</p>
-    <a href="#products" class="cta-btn">Shop Now</a>
-    </div>
+<section class="hero-section">
+  <div class="hero-content container">
+    <h1 class="hero-title">Biggest Sale of the Year!</h1>
+    <p class="hero-subtitle">Up to 50% off on all electronics and accessories</p>
+    <a href="#products" class="btn hero-cta">Shop Now</a>
+  </div>
 </section>
 
-<section class="products">
-    <div class="product-grid">
-    <div class="product-card">
-        <img src="placeholder.jpg" alt="Product Name">
-        <h3>Product Title</h3>
-        <p class="price">$29.99</p>
-        <button class="add-to-cart">Add to Cart</button>
-    </div>
-    <!-- Repeat product-card as needed for placeholders -->
-    </div>
+<section class="product-section container" id="products">
+  <h2>Featured Products</h2>
+  <div class="product-grid" id="product-grid">
+    <!-- Product cards will be dynamically inserted here -->
+  </div>
 </section>
 
-<script src="scripts/app.js"></script>
-<script src="scripts/product.js"></script>
+    <script src="scripts/app.js"></script>
 </body>
 </html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Shopping Cart - ShopEase</title>
+  <link rel="stylesheet" href="styles/main.css" />
+</head>
+<body>
+
+  <!-- Header (reuse your existing site header HTML structure) -->
+  <header class="site-header">
+    <div class="logo">
+      <a href="index.html">ShopEase</a>
+    </div>
+    <nav class="navbar">
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="index.html#products">Products</a></li>
+        <li><a href="#">About</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+    </nav>
+    <div class="header-actions">
+      <form class="search-form">
+        <input type="text" placeholder="Search products..." />
+        <button type="submit">🔍</button>
+      </form>
+      <div class="cart-icon">
+        🛒<span class="cart-badge" id="cart-count">0</span>
+      </div>
+      <button class="hamburger" id="hamburger-btn" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Cart Content -->
+  <main class="cart-container container">
+    <h1>Your Shopping Cart</h1>
+    <div id="cart-items-container">
+      <!-- Product items will be inserted here dynamically -->
+    </div>
+
+    <!-- Total price and action buttons -->
+    <div class="cart-summary">
+      <p><strong>Total:</strong> $<span id="cart-total">0.00</span></p>
+      <div class="cart-actions">
+        <a href="index.html#products" class="btn continue-shopping">← Continue Shopping</a>
+        <button id="checkout-btn" class="btn proceed-checkout" disabled>Proceed to Checkout</button>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer container">
+    <p>© 2025 ShopEase. All rights reserved.</p>
+  </footer>
+
+  <script src="scripts/app.js"></script>   <!-- For header/cart count logic -->
+  <script src="scripts/cart.js"></script>  <!-- Cart page specific logic -->
+</body>
+</html>
