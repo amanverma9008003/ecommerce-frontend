@@ -1,3 +1,21 @@
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.6.0/firebase-app.js';
+import { getAuth } from 'https://www.gstatic.com/firebasejs/9.6.0/firebase-auth.js'; // Assuming you have your Firebase app initialized in firebase-config.js
+
+//---Firebase authenticatrion setup---
+export const firebaseConfig = {
+  apiKey: "AIzaSyBAv01ffY7YdqTK0pTLNEFTaMHhtk2RK1c",
+  authDomain: "e-buy-3cf16.firebaseapp.com",
+  projectId: "e-buy-3cf16",
+  storageBucket: "e-buy-3cf16.firebasestorage.app",
+  messagingSenderId: "175016726223",
+  appId: "1:175016726223:web:e3b44b357212a87fcdb1ba",
+  measurementId: "G-ETG7LRZ4DS"
+};
+
+// Initialize Firebase
+const app=initializeApp(firebaseConfig);
+export const auth = getAuth(app);
+
 console.log("E-Commerce Website Loaded");
 
 // Mobile Hamburger Menu Functionality
@@ -9,6 +27,7 @@ document.addEventListener('DOMContentLoaded', function() {
     navbar.classList.toggle('active');
   });
 
+  console.log("worked app1");
   // Optional: Close menu after clicking a link (on mobile)
   document.querySelectorAll('.nav-links a').forEach(link => {
     link.addEventListener('click', () => {
@@ -19,53 +38,54 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 });
 
+console.log("worked app2");
 
-const productGrid = document.getElementById("product-grid");
+// Wait for the DOM to be fully loaded before adding event listeners
+document.addEventListener("DOMContentLoaded", () => {
+  // Event listener for Add to Cart buttons
+  // Ensure productGrid is defined and not null before adding the listener
+  const productGrid = document.getElementById('product-grid');
+  if (productGrid) {
+    productGrid.addEventListener("click", e => {
+      if (e.target.classList.contains("add-cart-btn")) {
+        const productId = e.target.getAttribute("data-id");
+        addToCart(productId);
+      }
+    });
+  } else {
+    console.error("Element with ID 'your-product-grid-id' not found.");
+  }
+});
 
 function showLoading() {
-  // Ensure 'loadingMessage' element exists in the HTML and is correctly selected.
-  const loadingElement = document.getElementById('loadingMessage');
-  if (loadingElement) {
-    loadingElement.innerHTML = 'Loading products...';
-  } else {
-    console.error("Error: Could not find the element with id 'loadingMessage'.");
-  }
+  console.log("Loading products..."); // Replace with actual loading indicator logic
 }
 
-// Show error message
-function showError(message) {
-  productGrid.innerHTML = `<p class="error-message">${message}</p>`;
+// Define the hideLoading function (often used with showLoading)
+function hideLoading() {
+  console.log("Loading finished."); // Replace with actual hide loading indicator logic
 }
 
-// Render products dynamically
+// Function to render products
 function renderProducts(products) {
-  productGrid.innerHTML = ""; // clear
+  // ... (your existing renderProducts function)
+  const productGrid = document.getElementById('product-grid'); // Assuming you have an element with id 'product-grid'
+  productGrid.innerHTML = ''; // Clear previous products
 
-if (productGrid===null){
-  console.error("Error: Could not find the element with id 'product-grid'.");
-  return; // Stop rendering if productGrid is not found
-}
   products.forEach(product => {
-    const card = document.createElement("div");
-    card.className = "product-card";
-
+    const card = document.createElement('div');
+    card.classList.add('product-card');
     card.innerHTML = `
-  <a href="product.html?id=${product.id}" class="product-link">
-    <img src="${product.image}" alt="${product.title}" loading="lazy" />
-  </a>
-  <div class="product-info">
-    <a href="product.html?id=${product.id}" class="product-link">
-      <h3 class="product-title">${product.title}</h3>
-    </a>
-    <p class="product-price">$${product.price.toFixed(2)}</p>
-    <button class="add-cart-btn" data-id="${product.id}">Add to Cart</button>
-  </div>
-`;
+      <h2>${product.title}</h2>
+      <p>${product.price}</p>
+      <img src="${product.image}" alt="${product.title}">
+    `; // Added closing backtick and corrected variable name
 
     productGrid.appendChild(card);
   });
 }
 
+console.log("worked app3");
 // Fetch products from API
 function fetchProducts() {
   showLoading();
@@ -79,10 +99,12 @@ function fetchProducts() {
     })
     .then(data => {
       renderProducts(data);
+      hideLoading(); // Hide loading after products are rendered
     })
     .catch(error => {
       console.error("Fetching error: ", error);
       showError("Failed to load products. Please try again later.");
+      hideLoading(); // Hide loading in case of an error
     });
 }
 
@@ -90,24 +112,37 @@ function fetchProducts() {
 fetchProducts();
 
 
-// Wait for the DOM to be fully loaded before adding event listeners
-document.addEventListener("DOMContentLoaded", () => {
-  // Event listener for Add to Cart buttons
-  // Ensure productGrid is defined and not null before adding the listener
-  const productGrid = document.getElementById('your-product-grid-id'); // Replace 'your-product-grid-id' with the actual ID of your product grid element
-  if (productGrid) {
-    productGrid.addEventListener("click", e => {
-      if (e.target.classList.contains("add-cart-btn")) {
-        const productId = e.target.getAttribute("data-id");
-        console.log(`Add to cart clicked for product id: ${productId}`);
-        // Add your cart logic here
-      }
-    });
-  } else {
-    console.error("Element with ID 'your-product-grid-id' not found.");
-  }
-});
+function showToast(message) {
+  const toast = document.createElement('div');
+  toast.className = 'toast-notification';
+  toast.textContent = message;
+  document.body.appendChild(toast);
+  
+  setTimeout(() => {
+    toast.classList.add('fade-out');
+    setTimeout(() => toast.remove(), 300);
+  }, 2000);
+}
 
+console.log("worked app4");
+
+function addToCart(productId) {
+  let cart = JSON.parse(localStorage.getItem('cart')) || [];
+  
+  // Check if product already in cart
+  const existingItem = cart.find(item => item.id === productId);
+  
+  if (existingItem) {
+    existingItem.quantity += 1;
+    showToast('Item quantity increased in cart');
+  } else {
+    cart.push({ id: productId, quantity: 1 });
+    showToast('Item added to cart');
+  }
+  
+  localStorage.setItem('cart', JSON.stringify(cart));
+  updateCartCount();
+}
 
 function updateCartCount() {
   const cartCountElem = document.getElementById('cart-count');
@@ -117,34 +152,3 @@ function updateCartCount() {
     cartCountElem.textContent = totalQuantity;
   }
 }
-/*// Initial call
-fetchProducts();
-
-// Wait for the DOM to be fully loaded before adding event listeners
-document.addEventListener("DOMContentLoaded", () => {
-  // Event listener for Add to Cart buttons
-  // Ensure productGrid is defined and not null before adding the listener
-  const productGrid = document.getElementById('your-product-grid-id'); // Replace 'your-product-grid-id' with the actual ID of your product grid element
-  if (productGrid) {
-    productGrid.addEventListener("click", e => {
-      if (e.target.classList.contains("add-cart-btn")) {
-        const productId = e.target.getAttribute("data-id");
-        console.log(`Add to cart clicked for product id: ${productId}`);
-        // Add your cart logic here
-      }
-    });
-  } else {
-    console.error("Element with ID 'your-product-grid-id' not found.");
-  }
-});
-
-
-function updateCartCount() {
-  const cartCountElem = document.getElementById('cart-count');
-  const cart = JSON.parse(localStorage.getItem('cart')) || [];
-  const totalQuantity = cart.reduce((acc, item) => acc + item.quantity, 0);
-  if(cartCountElem) {
-    cartCountElem.textContent = totalQuantity;
-  }
-}
- */

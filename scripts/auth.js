@@ -1,4 +1,30 @@
+import { auth } from './app.js';
+
 // Password visibility toggles
+document.querySelectorAll('.toggle-password').forEach(btn => {
+  btn.addEventListener('click', function () {
+    const input = this.previousElementSibling;
+    if (input.type === 'password') {
+      input.type = 'text';
+    } else {
+      input.type = 'password';
+    }
+  });
+});
+
+console.log("worked apputh 1");
+try {
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+
+  console.log("Firebase initialized successfully");
+} catch (error) {
+  console.error("Firebase initialization error:", error);
+  alert("Failed to initialize Firebase. Check console for details.");
+}
+
+
+
 document.querySelectorAll('.toggle-password').forEach(btn => {
   btn.addEventListener('click', function () {
     const input = this.previousElementSibling;
@@ -12,6 +38,7 @@ document.querySelectorAll('.toggle-password').forEach(btn => {
   });
 });
 
+console.log("worked apputh2");
 // --- LOGIN FORM HANDLING ---
 const loginForm = document.getElementById('login-form');
 if (loginForm) {
@@ -40,11 +67,11 @@ if (loginForm) {
       // Here, send login details to your backend (or mock)
       alert('Login successful! (Simulation only)');
       loginForm.reset();
-      // location.href = "index.html";
+      location.href = "index.html";
     }
   });
 }
-
+ console.log("worked apputh 3");
 // --- SIGNUP FORM HANDLING ---
 const signupForm = document.getElementById('signup-form');
 if (signupForm) {
@@ -91,7 +118,7 @@ if (signupForm) {
       // location.href = "login.html";
     }
   });
-
+console.log("workden app 4")
   // Password strength on signup
   document.getElementById('signup-password').addEventListener('input', function () {
     const strength = getPasswordStrength(this.value);
@@ -126,15 +153,7 @@ function getPasswordStrength(pw) {
   return { label: '', color: '#888' };
 }
 
-// Replace with your Firebase project config
-const firebaseConfig = {
-  apiKey: "AIzaSyBAv01ffY7YdqTK0pTLNEFTaMHhtk2RK1c",
-  authDomain: "e-buy-3cf16.firebaseapp.com",
-  // ...other config keys
-};
-firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
-
+console.log("workden apputh 5");
 if (signupForm) {
   signupForm.addEventListener('submit', function(e) {
     e.preventDefault();
@@ -162,6 +181,8 @@ if (signupForm) {
   });
 }
 
+console.log("workden apputh 6");
+
 // Already declared above, so just reuse loginForm
 if (loginForm) {
   loginForm.addEventListener('submit', function(e) {
@@ -169,33 +190,64 @@ if (loginForm) {
     const email = document.getElementById('login-email').value.trim();
     const pw = document.getElementById('login-password').value;
 
+    // Show loading state
+    const submitBtn = document.getElementById('login-submit');
+    const originalBtnText = submitBtn.textContent;
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Logging in...';
+
     auth.signInWithEmailAndPassword(email, pw)
       .then((userCredential) => {
-        alert("Login successful!");
-        location.href = "index.html"; // or your dashboard
+        // Success - redirect happens via auth state change handler
       })
       .catch((error) => {
-        setError('login-password-error', error.message);
+        let errorMessage = 'Login failed';
+        switch (error.code) {
+          case 'auth/invalid-email':
+            errorMessage = 'Invalid email address';
+            break;
+          case 'auth/user-disabled':
+            errorMessage = 'Account disabled';
+            break;
+          case 'auth/user-not-found':
+          case 'auth/wrong-password':
+            errorMessage = 'Invalid email or password';
+            break;
+          default:
+            errorMessage = error.message;
+        }
+        setError('login-password-error', errorMessage);
+      })
+      .finally(() => {
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalBtnText;
       });
   });
 }
 
 auth.onAuthStateChanged((user) => {
+  const loginLink = document.getElementById('login-link');
+  const logoutLink = document.getElementById('logout-link');
+  
   if (user) {
     // User logged in
-    document.getElementById('login-link').style.display = 'none';
-    document.getElementById('logout-link').style.display = 'inline';
-    // Optionally show user name, etc.
+    if (loginLink) loginLink.style.display = 'none';
+    if (logoutLink) logoutLink.style.display = 'inline';
+    
+    // If on login page, redirect to home
+    if (window.location.pathname.includes('login.html')) {
+      location.href = "index.html";
+    }
   } else {
     // Not logged in
-    document.getElementById('login-link').style.display = 'inline';
-    document.getElementById('logout-link').style.display = 'none';
-  }
-});
-
-auth.onAuthStateChanged((user) => {
-  if (!user) {
-    location.href = "login.html";
+    if (loginLink) loginLink.style.display = 'inline';
+    if (logoutLink) logoutLink.style.display = 'none';
+    
+    // Protect routes that require auth
+    const protectedRoutes = ['/cart.html', '/account.html'];
+    if (protectedRoutes.some(route => window.location.pathname.includes(route))) {
+      location.href = "login.html";
+    }
   }
 });
 
@@ -208,3 +260,5 @@ document.getElementById('logout-link').addEventListener('click', function(e) {
 });
 
 setError('signup-password-error', error.message); // Already in existing utility
+
+console.log("workden apputh7");
