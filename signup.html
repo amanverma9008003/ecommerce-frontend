@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sign Up - ShopEase</title>
+  <link rel="stylesheet" href="styles/main.css" />
+</head>
+<body>
+  <!-- HEADER -->
+  <header class="site-header"> ... </header>
+
+  <main class="auth-container">
+    <form id="signup-form" class="auth-form">
+      <h2>Create Account</h2>
+      <div class="form-group">
+        <label for="signup-name">Full Name</label>
+        <input type="text" id="signup-name" required placeholder="John Doe" />
+        <span class="form-error" id="signup-name-error"></span>
+      </div>
+      <div class="form-group">
+        <label for="signup-email">Email</label>
+        <input type="email" id="signup-email" required placeholder="you@email.com" />
+        <span class="form-error" id="signup-email-error"></span>
+      </div>
+      <div class="form-group">
+        <label for="signup-password">Password</label>
+        <div class="password-wrapper">
+          <input type="password" id="signup-password" required minlength="8" placeholder="••••••••" />
+          <button type="button" class="toggle-password" tabindex="-1">&#128065;</button>
+        </div>
+        <div class="password-strength" id="password-strength"></div>
+        <span class="form-error" id="signup-password-error"></span>
+      </div>
+      <div class="form-group">
+        <label for="signup-password-confirm">Confirm Password</label>
+        <input type="password" id="signup-password-confirm" required placeholder="Repeat password" />
+        <span class="form-error" id="signup-password-confirm-error"></span>
+      </div>
+      <button type="submit" class="btn auth-btn">Sign Up</button>
+      <p class="switch-form">
+        Already have an account? <a href="login.html">Sign In</a>
+      </p>
+    </form>
+  </main>
+
+  <footer class="site-footer container">
+    <p>© 2025 ShopEase. All rights reserved.</p>
+  </footer>
+  <script src="scripts/app.js"></script>
+  <script src="scripts/auth.js"></script>
+</body>
+</html>

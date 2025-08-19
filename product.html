@@ -30,19 +30,23 @@
       
       <div class="cart">
         <div class="cart-icon">
-          🛒<span class="cart-badge" id="cart-count">0</span>
+          <a href="cart.html" style="text-decoration: none;">🛒</a>
+          <span class="cart-badge" id="cart-count">0</span>
         </div>
       </div>
 
-      <button class="hamburger" id="hamburger-btn" aria-label="Menu">
+      <button class="hamburger" id="hamburger-menu" aria-label="Menu">
         <span></span><span></span><span></span>
       </button>
     </div>
   </div>
+  <a href="#" id="logout-link" style="display:none">Logout</a>
+
     </header>
   
   <!-- Main Content: Product Detail Section -->
   <main class="product-detail container" id="product-detail">
+    
     <!-- Product info will be dynamically injected here -->
   </main>
   
@@ -52,14 +56,6 @@
   <button type="button" id="increase-qty">+</button>
 </div>
 
-  <div class="product-images">
-  <div class="img-zoom-container">
-    <img src="${product.image}" alt="${product.title}" id="main-product-image" />
-    <div id="zoom-lens"></div>
-    <div id="zoom-result"></div>
-  </div>
-  <!-- Additional thumbnails if any -->
-</div>
 
 <div class="product-variations">
   <label for="size-select">Size:</label>
@@ -76,7 +72,8 @@
     <option value="green">Green</option>
   </select>
 </div>
-
+<div id="loadingMessage" style="display: none;"></div>
+  <div id="product-grid"></div>
   <!-- Optional footer -->
   <footer class="site-footer container">
     <p>© 2025 ShopEase. All rights reserved.</p>

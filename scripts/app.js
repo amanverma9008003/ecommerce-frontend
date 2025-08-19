@@ -22,9 +22,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
 const productGrid = document.getElementById("product-grid");
 
-// Show loading message
 function showLoading() {
-  productGrid.innerHTML = '<p class="loading-message">Loading products...</p>';
+  // Ensure 'loadingMessage' element exists in the HTML and is correctly selected.
+  const loadingElement = document.getElementById('loadingMessage');
+  if (loadingElement) {
+    loadingElement.innerHTML = 'Loading products...';
+  } else {
+    console.error("Error: Could not find the element with id 'loadingMessage'.");
+  }
 }
 
 // Show error message
@@ -36,6 +41,10 @@ function showError(message) {
 function renderProducts(products) {
   productGrid.innerHTML = ""; // clear
 
+if (productGrid===null){
+  console.error("Error: Could not find the element with id 'product-grid'.");
+  return; // Stop rendering if productGrid is not found
+}
   products.forEach(product => {
     const card = document.createElement("div");
     card.className = "product-card";
@@ -80,12 +89,22 @@ function fetchProducts() {
 // Initial call
 fetchProducts();
 
-// Event listener for Add to Cart buttons
-productGrid.addEventListener("click", e => {
-  if (e.target.classList.contains("add-cart-btn")) {
-    const productId = e.target.getAttribute("data-id");
-    console.log(`Add to cart clicked for product id: ${productId}`);
-    // Add your cart logic here
+
+// Wait for the DOM to be fully loaded before adding event listeners
+document.addEventListener("DOMContentLoaded", () => {
+  // Event listener for Add to Cart buttons
+  // Ensure productGrid is defined and not null before adding the listener
+  const productGrid = document.getElementById('your-product-grid-id'); // Replace 'your-product-grid-id' with the actual ID of your product grid element
+  if (productGrid) {
+    productGrid.addEventListener("click", e => {
+      if (e.target.classList.contains("add-cart-btn")) {
+        const productId = e.target.getAttribute("data-id");
+        console.log(`Add to cart clicked for product id: ${productId}`);
+        // Add your cart logic here
+      }
+    });
+  } else {
+    console.error("Element with ID 'your-product-grid-id' not found.");
   }
 });
 
@@ -98,5 +117,34 @@ function updateCartCount() {
     cartCountElem.textContent = totalQuantity;
   }
 }
+/*// Initial call
+fetchProducts();
 
-document.addEventListener('DOMContentLoaded', updateCartCount);
+// Wait for the DOM to be fully loaded before adding event listeners
+document.addEventListener("DOMContentLoaded", () => {
+  // Event listener for Add to Cart buttons
+  // Ensure productGrid is defined and not null before adding the listener
+  const productGrid = document.getElementById('your-product-grid-id'); // Replace 'your-product-grid-id' with the actual ID of your product grid element
+  if (productGrid) {
+    productGrid.addEventListener("click", e => {
+      if (e.target.classList.contains("add-cart-btn")) {
+        const productId = e.target.getAttribute("data-id");
+        console.log(`Add to cart clicked for product id: ${productId}`);
+        // Add your cart logic here
+      }
+    });
+  } else {
+    console.error("Element with ID 'your-product-grid-id' not found.");
+  }
+});
+
+
+function updateCartCount() {
+  const cartCountElem = document.getElementById('cart-count');
+  const cart = JSON.parse(localStorage.getItem('cart')) || [];
+  const totalQuantity = cart.reduce((acc, item) => acc + item.quantity, 0);
+  if(cartCountElem) {
+    cartCountElem.textContent = totalQuantity;
+  }
+}
+ */

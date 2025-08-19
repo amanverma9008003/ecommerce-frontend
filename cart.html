@@ -26,13 +26,20 @@
         <input type="text" placeholder="Search products..." />
         <button type="submit">🔍</button>
       </form>
-      <div class="cart-icon">
-        🛒<span class="cart-badge" id="cart-count">0</span>
+      
+      <div class="cart">
+        <div class="cart-icon">
+          <a href="index.html#cart.html" style="text-decoration: none;">🛒</a>
+          <span class="cart-badge" id="cart-count">0</span>
+        </div>
       </div>
-      <button class="hamburger" id="hamburger-btn" aria-label="Menu">
+
+      <button class="hamburger" id="hamburger-menu" aria-label="Menu">
         <span></span><span></span><span></span>
       </button>
     </div>
+    <a href="#" id="logout-link" style="display:none">Logout</a>
+
   </header>
 
   <!-- Main Cart Content -->
@@ -57,7 +64,7 @@
     <p>© 2025 ShopEase. All rights reserved.</p>
   </footer>
 
-  <script src="scripts/app.js"></script>   <!-- For header/cart count logic -->
+  <script src="scripts/app.js" type="module"></script>   <!-- For header/cart count logic -->
   <script src="scripts/cart.js"></script>  <!-- Cart page specific logic -->
 </body>
 </html>

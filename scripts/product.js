@@ -220,10 +220,11 @@ quantityInput.addEventListener('input', () => {
   } else if (val > 99) {
     quantityInput.value = 99;
   }
-  updatePriceDisplay();
+  // Assuming currentProduct is defined here, pass it to the function
+  updatePriceDisplay(currentProduct);
 });
 
-function updatePriceDisplay() {
+function updatePriceDisplay(currentProduct) { // Accept currentProduct as an argument
   let basePrice = currentProduct.price;
   let priceModifier = 0;
 
@@ -240,9 +241,25 @@ function updatePriceDisplay() {
   }
 }
 
-const addToCartBtn = document.getElementById('add-to-cart-btn');
-addToCartBtn.addEventListener('click', () => {
-  const qty = parseInt(quantityInput.value) || 1;
+
+const addToCartBtn = document.getElementById('add-to-button-btn'); // Replace 'your-button-id' with the actual ID
+      if (addToCartBtn) { // Check if the element was found
+        addToCartBtn.addEventListener('click', () => {
+          // your event handler code
+        });
+      } else {
+        console.error('Element with ID "your-button-id" not found.');
+      }
+
+
+  async function addProductToCart(productId, selectedSize, selectedColor, qty) {
+  // Assume fetchProductById is a function that fetches product data
+  const currentProduct = await fetchProductById(productId); // Ensure currentProduct is defined here
+
+  if (!currentProduct) {
+    console.error('Product data not found.');
+    return; // Exit if product data isn't available
+  }
 
   const cartItem = {
     id: currentProduct.id,
@@ -257,23 +274,52 @@ addToCartBtn.addEventListener('click', () => {
   let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
   // Check if same product with same variations exists
-  const existingIndex = cart.findIndex(item => 
-    item.id === cartItem.id && item.size === cartItem.size && item.color === cartItem.color);
+  // ... rest of your code
+}
 
-  if (existingIndex > -1) {
-    cart[existingIndex].quantity += qty;
-  } else {
-    cart.push(cartItem);
-  }
+// Define cartItem with the details of the item to add
+// Retrieve cart from localStorage or initialize as an empty array
+const cart = JSON.parse(localStorage.getItem('cart')) || [];
 
-  localStorage.setItem('cart', JSON.stringify(cart));
+// Assume currentProduct data is fetched and available
+// For example:
+let currentProduct = {
+    id: 'product123',
+    name: 'Example Product',
+    price: 25.00
+    // other product details
+};
 
-  // Update cart count badge
-  updateCartCount();
+// Define the quantity of the product to add
+let qty = 1; // Or get this value from a user input field, e.g., document.getElementById('quantityInput').value;
 
-  // Show feedback (simple alert or improve with toast/modal)
-  alert(`Added ${qty} x "${currentProduct.title}" (${selectedSize}, ${selectedColor}) to your cart.`);
-});
+// Assume selectedSize and selectedColor are defined elsewhere
+
+// Define cartItem with the details of the item to add
+const cartItem = {
+  id: currentProduct.id, // Assuming currentProduct has an id
+  size: selectedSize, // Assuming selectedSize is defined
+  color: selectedColor, // Assuming selectedColor is defined
+  quantity: qty // Now qty is defined
+};
+
+// Check if same product with same variations exists
+const existingIndex = cart.findIndex(item =>
+  item.id === cartItem.id && item.size === cartItem.size && item.color === cartItem.color);
+
+if (existingIndex > -1) {
+  cart[existingIndex].quantity += qty; // Now qty is defined
+} else {
+  cart.push(cartItem);
+}
+
+localStorage.setItem('cart', JSON.stringify(cart));
+
+// Update cart count badge
+updateCartCount();
+
+// Show feedback (simple alert or improve with toast/modal)
+alert(`Added ${qty} x "${currentProduct.title}" (${selectedSize}, ${selectedColor}) to your cart.`);
 
 addToCartBtn.addEventListener('click', () => {
   const qty = parseInt(quantityInput.value) || 1;
@@ -319,11 +365,8 @@ function addOrUpdateCartItem(item) {
 }
 
 function updateCartCount() {
-  if (qty < 1) {
-  alert("Quantity must be at least 1");
-  return;
-  }
-
+  let qty=0;
+  
   const cartCountElem = document.getElementById('cart-count');
   const cart = JSON.parse(localStorage.getItem('cart')) || [];
   const totalQuantity = cart.reduce((sum, item) => sum + item.quantity, 0);
