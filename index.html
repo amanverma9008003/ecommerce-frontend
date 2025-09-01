@@ -6,69 +6,85 @@
     <title>E-Commerce Frontend</title>
     <link rel="stylesheet" href="styles/main.css">
 </head>
+
+<script type="module">
+  import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
+  import { app } from "./firebase-config.js";
+
+  const auth = getAuth(app);
+
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      console.log("✅ User logged in:", user.email);
+      document.getElementById("authStatus").innerText = `Welcome, ${user.email}`;
+    } else {
+      console.log("❌ No user logged in");
+      document.getElementById("authStatus").innerText = "Not logged in";
+    }
+  });
+
+  // Logout button
+  document.getElementById("logoutBtn").addEventListener("click", () => {
+    signOut(auth).then(() => {
+      alert("Logged out successfully");
+      window.location.href = "login.html";
+    });
+  });
+</script>
+
 <body>
-    <header class="site-header">
-  <div class="container header-content">
-    <!-- Logo -->
-    <div class="logo">
-      <a href="#">ShopMate</a>
-    </div>
-    
-    <!-- Navigation Links -->
-    <nav class="navbar">
-      <ul class="nav-links">
-        <li><a href="#">Home</a></li>
-        <li><a href="#">Products</a></li>
-        <li><a href="#">About</a></li>
-        <li><a href="#">Contact</a></li>
-      </ul>
-    </nav>
-    
-    <!-- Search, Cart & Hamburger -->
-    <div class="header-actions">
-      <!-- Search Bar -->
-      <div class="search-bar">
-        <input type="text" placeholder="Search products..." />
-        <button class="search-btn">&#128269;</button> <!-- Search icon -->
-      </div>
 
-      <!-- Cart Icon -->
-      <div class="cart">
-        <div class="cart-icon">
-          <a href="cart.html" style="text-decoration: none;">🛒</a>
-          <span class="cart-badge" id="cart-count">0</span>
-        </div>
-      </div>
-      </div>
-      <!-- Hamburger Icon for mobile -->
-      <button class="hamburger" id="hamburger-menu" aria-label="Toggle navigation">
-        <span></span>
-        <span></span>
-        <span></span>
-      </button>
+<header>
+  <div class="logo"> 🛍️MyStore</div>
+
+  <!-- Navigation Menu -->
+  <nav class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="product.html">Products</a>
+    <a href="#">About</a>
+    <a href="#">Contact</a>
+  </nav>
+
+  <!-- Right Side (Search + Cart + Hamburger) -->
+  <div class="header-right">
+    <!-- Search Bar -->
+    <div class="search-bar">
+      <input type="text" placeholder="Search products...">
+      <button>🔍</button>
     </div>
+
+    <!-- Cart -->
+    <div class="cart">
+      <a href="cart.html" style="text-decoration: none;">
+      <i class="fa fa-shopping-cart">
+        🛒<span class="badge">0</span>
+      </i>
+    </a>
+    </div>
+
+    <!-- Hamburger Menu (only visible on mobile) -->
+    <div class="hamburger">☰</div>
   </div>
-
-  <a href="#" id="logout-link" style="display:none">Logout</a>
-
 </header>
 
-<section class="hero-section">
-    
-  <div class="hero-content container">
-    <h1 class="hero-title">Biggest Sale of the Year!</h1>
-    <p class="hero-subtitle">Up to 50% off on all electronics and accessories</p>
-    <a href="#products" class="btn hero-cta">Shop Now</a>
+<!-- Hero Section -->
+<section class="hero">
+  <div class="hero-content">
+    <h1>Biggest Sale of the Year 2025</h1>
+    <p>Up to 50% OFF on all products. Limited time only!</p>
+    <a href="#" class="cta-btn">Shop Now</a>
   </div>
 </section>
 
-<section class="product-section container" id="products">
+<!-- Product Section -->
+<section class="products">
   <h2>Featured Products</h2>
+  <p id="loadingMsg">Loading products...</p>
+  <p id="errorMsg" style="display:none; color:red;">❌ Failed to load products. Please try again later.</p>
+  <div class="product-grid" id="productGrid"></div>
 </section>
-<div id="loadingMessage" style="display: none;"></div>
-<div id="product-grid">
-      <!-- Product items will go here -->
-    </div>
+
+
     <script src="scripts/app.js" type="module"></script>
     <script src="scripts/auth.js" type="module"></script>
 </body>

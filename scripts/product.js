@@ -1,402 +1,130 @@
-// Utility to get query parameters from URL
-function getQueryParam(param) {
-  const urlParams = new URLSearchParams(window.location.search);
-  return urlParams.get(param);
+// Get product ID from URL
+const params = new URLSearchParams(window.location.search);
+const productId = params.get("id");
+
+function getCart() {
+  return JSON.parse(localStorage.getItem("cart")) || [];
 }
 
-// Elements
-const productDetailContainer = document.getElementById('product-detail');
-const cartCountElem = document.getElementById('cart-count'); // For updating cart count in header
-
-// Fetch product ID from URL
-const productId = getQueryParam('id');
-
-if (!productId) {
-  productDetailContainer.innerHTML = '<p class="error-message">Product ID is missing.</p>';
-} else {
-  fetchProductDetails(productId);
-  updateCartCount(); // initialize cart count on page load
+function saveCart(cart) {
+  localStorage.setItem("cart", JSON.stringify(cart));
 }
 
-// Fetch product details from API and render
-function fetchProductDetails(id) {
-  productDetailContainer.innerHTML = '<p class="loading-message">Loading product details...</p>';
+//
+const quantityInput = document.getElementById('quantity');
+const addToCartBtn = document.getElementById('addToCart');
+const cartMessage = document.getElementById('cartMessage');
+const increaseBtn = document.getElementById('increase');
+const decreaseBtn = document.getElementById('decrease');
+let basePrice = 0;
+// will be set when fetching product
 
-  fetch(`https://fakestoreapi.com/products/${id}`)
-    .then(res => {
-      if (!res.ok) throw new Error('Failed to fetch product');
-      return res.json();
-    })
-    .then(product => {
-      renderProductDetail(product);
-    })
-    .catch(err => {
-      productDetailContainer.innerHTML = `<p class="error-message">Could not load product details. Try again later.</p>`;
-      console.error(err);
-    });
-}
+// Select elements
+const productDetail = document.getElementById("productDetail");
+const loadingMsg = document.getElementById("loadingMsg");
+const errorMsg = document.getElementById("errorMsg");
 
-// Render product detail dynamically
-function renderProductDetail(product) {
-  productDetailContainer.innerHTML = `
-    <div class="product-detail-wrapper">
-      <div class="product-images">
-        <img src="${product.image}" alt="${product.title}" id="main-product-image" />
-        <!-- If there were multiple images, add thumbnails here -->
-      </div>
-      <div class="product-info-detail">
-        <h1>${product.title}</h1>
-        <p class="product-price">$${product.price.toFixed(2)}</p>
-        <p class="product-description">${product.description}</p>
+// Fetch product details
+async function fetchProductDetail() {
+  try {
+    loadingMsg.style.display = "block";
+    errorMsg.style.display = "none";
 
-        <!-- Variations Section - optional, FakeStore API doesn’t provide variations -->
-        <!-- Add here if you want to extend with sizes/colors -->
+    const response = await fetch(`https://fakestoreapi.com/products/${productId}`);
+    if (!response.ok) throw new Error("Failed to fetch product");
 
-        <button id="add-to-cart-btn" data-id="${product.id}">Add to Cart</button>
-      </div>
-    </div>
-  `;
+    const product = await response.json();
+    loadingMsg.style.display = "none";
 
-  // Attach Add to Cart event listener
-  const addToCartBtn = document.getElementById('add-to-cart-btn');
-  addToCartBtn.addEventListener('click', () => {
-    addToCart(product);
-  });
-
-  imageZoom("main-product-image", "zoom-result", "zoom-lens");
-}
-
-// Add to Cart logic using localStorage
-function addToCart(product) {
-  // Get existing cart from localStorage or empty array
-  let cart = JSON.parse(localStorage.getItem('cart')) || [];
-
-  // Check if product already in cart
-  const index = cart.findIndex(item => item.id === product.id);
-  if (index > -1) {
-    // Increase quantity if already exists
-    cart[index].quantity += 1;
-  } else {
-    // Add new product with quantity 1
-    cart.push({ ...product, quantity: 1 });
+    productDetail.innerHTML = `
+      <div class="product-container">
+        <div class="product-image">
+          <img src="${product.image}" alt="${product.title}" id="mainImage" loading="lazy"
+      decoding="async"
+      width="300" height="300">
+        </div>
+        <div class="product-info">
+          <h2>${product.title}</h2>
+          <p class="price">$${product.price.toFixed(2)}</p>
+          <p class="description">${product.description}</p>
+          <button id="addToCartBtn">Add to Cart</button>
+        </div>
+      </div>`;
   }
-
-  // Save updated cart
-  localStorage.setItem('cart', JSON.stringify(cart));
-
-  alert(`Added "${product.title}" to cart.`);
-
-  updateCartCount();
-}
-
-// Display current cart count in header badge
-function updateCartCount() {
-  const cart = JSON.parse(localStorage.getItem('cart')) || [];
-  const totalQuantity = cart.reduce((sum, item) => sum + item.quantity, 0);
-  if (cartCountElem) {
-    cartCountElem.textContent = totalQuantity;
+  catch(error) {
+    console.error("Error:the pappa", error);
+    loadingMsg.style.display = "none";
+    errorMsg.style.display = "block";
   }
-}
+  // Add to Cart functionality
+  document.getElementById("addToCartBtn").addEventListener("click", () => {
+    const size = document.getElementById("size").value;
+    const color = document.getElementById("color").value;
+    const quantity = parseInt(quantityInput.value, 10);
 
-function imageZoom(imgID, resultID, lensID) {
-  const img = document.getElementById(imgID);
-  const result = document.getElementById(resultID);
-  const lens = document.getElementById(lensID);
-
-  if (!img || !result || !lens) return;
-
-  result.style.backgroundImage = `url('${img.src}')`;
-  result.style.backgroundSize = (img.width * 3) + "px " + (img.height * 3) + "px";
-
-  const cx = result.offsetWidth / lens.offsetWidth;
-  const cy = result.offsetHeight / lens.offsetHeight;
-
-  function moveLens(e) {
-    e.preventDefault();
-    let pos = getCursorPos(e);
-    let x = pos.x - (lens.offsetWidth / 2);
-    let y = pos.y - (lens.offsetHeight / 2);
-
-    // Prevent lens from going outside the image
-    if (x > img.width - lens.offsetWidth) x = img.width - lens.offsetWidth;
-    if (x < 0) x = 0;
-    if (y > img.height - lens.offsetHeight) y = img.height - lens.offsetHeight;
-    if (y < 0) y = 0;
-
-    lens.style.left = x + "px";
-    lens.style.top = y + "px";
-
-    result.style.backgroundPosition = `-${x * cx}px -${y * cy}px`;
-  }
-
-  function getCursorPos(e) {
-    const rect = img.getBoundingClientRect();
-    let x = e.pageX - rect.left - window.pageXOffset;
-    let y = e.pageY - rect.top - window.pageYOffset;
-    return { x, y };
-  }
-
-  img.addEventListener("mousemove", () => {
-    lens.style.visibility = "visible";
-    result.style.display = "block";
-  });
-
-  img.addEventListener("mouseout", () => {
-    lens.style.visibility = "hidden";
-    result.style.display = "none";
-  });
-
-  lens.addEventListener("mousemove", moveLens);
-  img.addEventListener("mousemove", moveLens);
-
-  // For touch devices: toggle zoom on tap
-  img.addEventListener("touchstart", () => {
-    if (result.style.display === "block") {
-      lens.style.visibility = "hidden";
-      result.style.display = "none";
-    } else {
-      lens.style.visibility = "visible";
-      result.style.display = "block";
+    // Basic validation
+    if (!productId || !size || !color || isNaN(quantity) || quantity <= 0) {
+      alert("Please fill in all fields correctly.");
+      return;
     }
+
+    addToCart({ id: productId, size, color, quantity });
   });
-}
-
-
-
-let selectedSize = "M";
-let selectedColor = "blue";
-
-document.addEventListener('change', (e) => {
-  if (e.target.id === 'size-select') {
-    selectedSize = e.target.value;
-    updatePriceDisplay();
-  }
-  if (e.target.id === 'color-select') {
-    selectedColor = e.target.value;
-    updatePriceDisplay();
-  }
-});
-
-function updatePriceDisplay() {
-  // For example, you might add a small price adjustment for certain sizes/colors
-  let basePrice = currentProduct.price; // store current product globally when fetched
-  let priceModifier = 0;
-
-  if (selectedSize === "L") priceModifier += 5;
-  if (selectedColor === "red") priceModifier += 2;
-
-  const totalPrice = basePrice + priceModifier;
   
-  const priceElem = document.querySelector('.product-price');
-  if (priceElem) {
-    priceElem.textContent = `$${totalPrice.toFixed(2)}`;
-  }
 }
+// Add to Cart using localStorage
+function addToCart(product) {
+  let cart = JSON.parse(localStorage.getItem("cart")) || [];
+  cart.push(product);
+  localStorage.setItem("cart", JSON.stringify(cart));
 
-const quantityInput = document.getElementById('quantity-input');
-const decreaseBtn = document.getElementById('decrease-qty');
-const increaseBtn = document.getElementById('increase-qty');
-
-decreaseBtn.addEventListener('click', () => {
-  let currentQty = parseInt(quantityInput.value);
-  if (currentQty > 1) {
-    quantityInput.value = currentQty - 1;
-    updatePriceDisplay();
-  }
-});
+  // Update cart count in navbar
+  document.getElementById("cartCount").innerText = cart.length;
+}
 
 increaseBtn.addEventListener('click', () => {
-  let currentQty = parseInt(quantityInput.value);
-  if (currentQty < 99) {
-    quantityInput.value = currentQty + 1;
-    updatePriceDisplay();
-  }
+  let value = parseInt(quantityInput.value);
+  if (value < 10) quantityInput.value = value + 1;
 });
 
-quantityInput.addEventListener('input', () => {
-  let val = parseInt(quantityInput.value);
-  if (isNaN(val) || val < 1) {
-    quantityInput.value = 1;
-  } else if (val > 99) {
-    quantityInput.value = 99;
-  }
-  // Assuming currentProduct is defined here, pass it to the function
-  updatePriceDisplay(currentProduct);
+decreaseBtn.addEventListener('click', () => {
+  let value = parseInt(quantityInput.value);
+  if (value > 1) quantityInput.value = value - 1;
 });
 
-function updatePriceDisplay(currentProduct) { // Accept currentProduct as an argument
-  let basePrice = currentProduct.price;
-  let priceModifier = 0;
-
-  if (selectedSize === "L") priceModifier += 5;
-  if (selectedColor === "red") priceModifier += 2;
-
-  let quantity = parseInt(quantityInput.value) || 1;
-
-  let totalPrice = (basePrice + priceModifier) * quantity;
-
-  const priceElem = document.querySelector('.product-price');
-  if (priceElem) {
-    priceElem.textContent = `$${totalPrice.toFixed(2)}`;
-  }
+function updatePrice() {
+  const quantity = parseInt(quantityInput.value);
+  const total = basePrice * quantity;
+  document.getElementById('product-price').textContent = `$${total.toFixed(2)}`;
 }
-
-
-const addToCartBtn = document.getElementById('add-to-button-btn'); // Replace 'your-button-id' with the actual ID
-      if (addToCartBtn) { // Check if the element was found
-        addToCartBtn.addEventListener('click', () => {
-          // your event handler code
-        });
-      } else {
-        console.error('Element with ID "your-button-id" not found.');
-      }
-
-
-  async function addProductToCart(productId, selectedSize, selectedColor, qty) {
-  // Assume fetchProductById is a function that fetches product data
-  const currentProduct = await fetchProductById(productId); // Ensure currentProduct is defined here
-
-  if (!currentProduct) {
-    console.error('Product data not found.');
-    return; // Exit if product data isn't available
-  }
-
-  const cartItem = {
-    id: currentProduct.id,
-    title: currentProduct.title,
-    price: currentProduct.price,
-    size: selectedSize,
-    color: selectedColor,
-    quantity: qty,
-    image: currentProduct.image
-  };
-
-  let cart = JSON.parse(localStorage.getItem('cart')) || [];
-
-  // Check if same product with same variations exists
-  // ... rest of your code
-}
-
-// Define cartItem with the details of the item to add
-// Retrieve cart from localStorage or initialize as an empty array
-const cart = JSON.parse(localStorage.getItem('cart')) || [];
-
-// Assume currentProduct data is fetched and available
-// For example:
-let currentProduct = {
-    id: 'product123',
-    name: 'Example Product',
-    price: 25.00
-    // other product details
-};
-
-// Define the quantity of the product to add
-let qty = 1; // Or get this value from a user input field, e.g., document.getElementById('quantityInput').value;
-
-// Assume selectedSize and selectedColor are defined elsewhere
-
-// Define cartItem with the details of the item to add
-const cartItem = {
-  id: currentProduct.id, // Assuming currentProduct has an id
-  size: selectedSize, // Assuming selectedSize is defined
-  color: selectedColor, // Assuming selectedColor is defined
-  quantity: qty // Now qty is defined
-};
-
-// Check if same product with same variations exists
-const existingIndex = cart.findIndex(item =>
-  item.id === cartItem.id && item.size === cartItem.size && item.color === cartItem.color);
-
-if (existingIndex > -1) {
-  cart[existingIndex].quantity += qty; // Now qty is defined
-} else {
-  cart.push(cartItem);
-}
-
-localStorage.setItem('cart', JSON.stringify(cart));
-
-// Update cart count badge
-updateCartCount();
-
-// Show feedback (simple alert or improve with toast/modal)
-alert(`Added ${qty} x "${currentProduct.title}" (${selectedSize}, ${selectedColor}) to your cart.`);
 
 addToCartBtn.addEventListener('click', () => {
-  const qty = parseInt(quantityInput.value) || 1;
+  const productId = new URLSearchParams(window.location.search).get('id');
+  const size = document.getElementById('size').value;
+  const color = document.getElementById('color').value;
+  const quantity = parseInt(quantityInput.value, 10);
 
-  const cartItem = {
-    id: currentProduct.id,
-    title: currentProduct.title,
-    price: calculateCurrentPrice(),  // function that calculates price with variations & quantity
-    basePrice: currentProduct.price, // save original price for reference
-    size: selectedSize,
-    color: selectedColor,
-    quantity: qty,
-    image: currentProduct.image
-  };
+  // Basic validation
+  if (!productId || !size || !color || isNaN(quantity) || quantity <= 0) {
+    alert('Please fill in all fields correctly.');
+    return;
+  }
 
-  addOrUpdateCartItem(cartItem);
+  let cart = [];
+  try {
+    cart = JSON.parse(localStorage.getItem('cart')) || [];
+  } catch (error) {
+    console.error('Error parsing cart data:', error);
+  }
+
+  cart.push({ id: productId, size, color, quantity });
+  localStorage.setItem('cart', JSON.stringify(cart));
+
+  cartMessage.style.display = 'block'; // show success message
+  setTimeout(() => cartMessage.style.display = 'none', 2000);
+
+  // update cart count in nav
+  document.getElementById('cartCount').textContent = cart.length;
 });
 
-
-//
-function addOrUpdateCartItem(item) {
-  let cart = JSON.parse(localStorage.getItem('cart')) || [];
-
-  // Find if product with same ID and variations already exists
-  const existingIndex = cart.findIndex(cartItem =>
-    cartItem.id === item.id &&
-    cartItem.size === item.size &&
-    cartItem.color === item.color
-  );
-
-  if (existingIndex > -1) {
-    // Update quantity by adding new quantity
-    cart[existingIndex].quantity += item.quantity;
-    // Optionally update price if needed or recalculate totals elsewhere
-  } else {
-    cart.push(item); // Add new item
-  }
-
-  localStorage.setItem('cart', JSON.stringify(cart));
-  
-  updateCartCount();
-  showAddToCartFeedback(item);
-}
-
-function updateCartCount() {
-  let qty=0;
-  
-  const cartCountElem = document.getElementById('cart-count');
-  const cart = JSON.parse(localStorage.getItem('cart')) || [];
-  const totalQuantity = cart.reduce((sum, item) => sum + item.quantity, 0);
-
-  if (cartCountElem) {
-    cartCountElem.textContent = totalQuantity;
-  }
-}
-
-// Ensure this runs on page load:
-document.addEventListener('DOMContentLoaded', updateCartCount);
-
-//
-
-function showAddToCartFeedback(item) {
-  const feedback = document.createElement('div');
-  feedback.className = 'add-cart-feedback';
-  feedback.textContent = `"${item.title}" added to cart!`;
-
-  document.body.appendChild(feedback);
-
-  // Animate: fade in then fade out after 3 seconds
-  setTimeout(() => {
-    feedback.classList.add('show');
-  }, 100);
-  setTimeout(() => {
-    feedback.classList.remove('show');
-    setTimeout(() => {
-      document.body.removeChild(feedback);
-    }, 500); // Allow fade out animation before removing
-  }, 3100);
-}
-
+fetchProductDetail();

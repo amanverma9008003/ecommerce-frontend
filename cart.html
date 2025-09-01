@@ -1,70 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Shopping Cart - ShopEase</title>
-  <link rel="stylesheet" href="styles/main.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shopping Cart</title>
+  <link rel="stylesheet" href="styles/cart.css">
 </head>
 <body>
 
-  <!-- Header (reuse your existing site header HTML structure) -->
-  <header class="site-header">
-    <div class="logo">
-      <a href="index.html">ShopEase</a>
-    </div>
-    <nav class="navbar">
-      <ul class="nav-links">
-        <li><a href="index.html">Home</a></li>
-        <li><a href="index.html#products">Products</a></li>
-        <li><a href="#">About</a></li>
-        <li><a href="#">Contact</a></li>
-      </ul>
-    </nav>
-    <div class="header-actions">
-      <form class="search-form">
-        <input type="text" placeholder="Search products..." />
-        <button type="submit">🔍</button>
-      </form>
-      
-      <div class="cart">
-        <div class="cart-icon">
-          <a href="index.html#cart.html" style="text-decoration: none;">🛒</a>
-          <span class="cart-badge" id="cart-count">0</span>
-        </div>
-      </div>
+  <!-- Navbar -->
+  <nav>
+    <a href="index.html">🏠 Home</a> |
+    <a href="product.html">🛍 Products</a> |
+    <a href="cart.html" >🛒 Cart (<span id="cartCount">0</span>)</a>
+  </nav>
 
-      <button class="hamburger" id="hamburger-menu" aria-label="Menu">
-        <span></span><span></span><span></span>
-      </button>
-    </div>
-    <a href="#" id="logout-link" style="display:none">Logout</a>
-
-  </header>
-
-  <!-- Main Cart Content -->
-  <main class="cart-container container">
+  <!-- Cart Container -->
+  <section class="cart-container">
     <h1>Your Shopping Cart</h1>
-    <div id="cart-items-container">
-      <!-- Product items will be inserted here dynamically -->
-    </div>
+    <div id="cartItems"></div>
 
-    <!-- Total price and action buttons -->
+    <!-- Total Section -->
     <div class="cart-summary">
-      <p><strong>Total:</strong> $<span id="cart-total">0.00</span></p>
-      <div class="cart-actions">
-        <a href="index.html#products" class="btn continue-shopping">← Continue Shopping</a>
-        <button id="checkout-btn" class="btn proceed-checkout" disabled>Proceed to Checkout</button>
-      </div>
+      <h2>Total: $<span id="cartTotal">0.00</span></h2>
+      <button id="checkoutBtn" disabled>Proceed to Checkout</button>
+      <button ><a href='product.html' style="text-decoration: none;">⬅ Continue Shopping</a></button>
     </div>
-  </main>
+  </section>
 
-  <!-- Footer -->
-  <footer class="site-footer container">
-    <p>© 2025 ShopEase. All rights reserved.</p>
-  </footer>
-
-  <script src="scripts/app.js" type="module"></script>   <!-- For header/cart count logic -->
-  <script src="scripts/cart.js"></script>  <!-- Cart page specific logic -->
+  <script src="scripts/cart.js"></script>
 </body>
 </html>

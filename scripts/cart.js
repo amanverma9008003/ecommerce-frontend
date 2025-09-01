@@ -1,43 +1,46 @@
-// Elements
-const cartItemsContainer = document.getElementById('cart-items-container');
-const cartTotalElem = document.getElementById('cart-total');
-const checkoutBtn = document.getElementById('checkout-btn');
-const cartCountElem = document.getElementById('cart-count');  // Header badge
+// On Load
+document.addEventListener("DOMContentLoaded", () => {
+  renderCart();
+});
 
-// Load cart from localStorage
-function loadCart() {
-  const cart = JSON.parse(localStorage.getItem('cart')) || [];
-  return cart;
+document.getElementById("checkoutBtn").addEventListener("click", () => {
+  window.location.href = "checkout.html";
+});
+
+// Utility Functions
+function getCart() {
+  return JSON.parse(localStorage.getItem("cart")) || [];
 }
 
 // Save cart to localStorage
 function saveCart(cart) {
-  localStorage.setItem('cart', JSON.stringify(cart));
+  localStorage.setItem("cart", JSON.stringify(cart));
 }
 
 // Update cart count in header
 function updateCartCount() {
-  const cart = loadCart();
-  const totalQuantity = cart.reduce((sum, item) => sum + item.quantity, 0);
-  if (cartCountElem) {
-    cartCountElem.textContent = totalQuantity;
-  }
+  let cart = getCart();
+  let totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+  document.getElementById("cartCount").textContent = totalItems;
 }
 
-// Render cart items
-function renderCartItems() {
-  const cart = loadCart();
-  cartItemsContainer.innerHTML = ''; // Clear existing items
+// Render Cart
+function renderCart() {
+  const cartItemsContainer = document.getElementById("cartItems");
+  const cart = getCart();
+
+  cartItemsContainer.innerHTML = ""; // clear before re-render
 
   if (cart.length === 0) {
-    cartItemsContainer.innerHTML = '<p>Your cart is empty.</p>';
-    checkoutBtn.disabled = true;
+    cartItemsContainer.innerHTML = "<p>Your cart is empty 🛒</p>";
+    document.getElementById("checkoutBtn").disabled = true;
+    document.getElementById("cartTotal").textContent = "0.00";
     updateCartCount();
     updateCartTotal();
     return;
   }
 
-  checkoutBtn.disabled = false;
+  let total = 0;
 
   cart.forEach(item => {
     const itemDiv = document.createElement('div');
@@ -55,6 +58,7 @@ function renderCartItems() {
             ${item.size ? 'Size: ' + item.size : ''} ${item.color ? ' | Color: ' + item.color : ''}
           </p>
         ` : ''}
+        <p class="product-quantity">Quantity: ${item.quantity}</p>
         <p class="product-price">$${(item.price * item.quantity).toFixed(2)}</p>
 
         <div class="cart-item-actions">
@@ -66,89 +70,34 @@ function renderCartItems() {
           <button class="remove-btn">Remove</button>
         </div>
       </div>
+      <button onclick="removeItem(${index})">❌ Remove</button>
     `;
 
-    cartItemsContainer.appendChild(itemDiv);
+    cartItemsContainer.appendChild(div);
   });
 
+  document.getElementById("cartTotal").textContent = total.toFixed(2);
+  document.getElementById("checkoutBtn").disabled = false;
   updateCartCount();
   updateCartTotal();
 }
 
-// Update total price display
-function updateCartTotal() {
-  const cart = loadCart();
-  const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-  cartTotalElem.textContent = totalPrice.toFixed(2);
-}
-
-// Handle quantity changes
-cartItemsContainer.addEventListener('click', e => {
-  const target = e.target;
-  if (target.classList.contains('qty-btn')) {
-    const isIncrease = target.classList.contains('increase');
-    const itemDiv = target.closest('.cart-item');
-    const qtyInput = itemDiv.querySelector('.qty-input');
-    let currentQty = parseInt(qtyInput.value);
-
-    if (isIncrease) {
-      if (currentQty < 99) qtyInput.value = currentQty + 1;
-    } else {
-      if (currentQty > 1) qtyInput.value = currentQty - 1;
-    }
-
-    updateQuantity(itemDiv.dataset.id, itemDiv.dataset.size, itemDiv.dataset.color, parseInt(qtyInput.value));
-  }
-});
-
-// Direct input change for quantity
-cartItemsContainer.addEventListener('input', e => {
-  if (e.target.classList.contains('qty-input')) {
-    const qtyInput = e.target;
-    let val = parseInt(qtyInput.value);
-    if (isNaN(val) || val < 1) val = 1;
-    else if (val > 99) val = 99;
-    qtyInput.value = val;
-
-    const itemDiv = qtyInput.closest('.cart-item');
-    updateQuantity(itemDiv.dataset.id, itemDiv.dataset.size, itemDiv.dataset.color, val);
-  }
-});
-
-// Update quantity in localStorage and refresh UI
-function updateQuantity(id, size, color, newQty) {
-  let cart = loadCart();
-  
-  const index = cart.findIndex(item => item.id === id && item.size === size && item.color === color);
-  
-  if (index !== -1) {
-    cart[index].quantity = newQty;
-    
+// Quantity Update
+function updateQuantity(index, change) {
+  let cart = getCart();
+  if (cart[index].quantity + change >= 1) {
+    cart[index].quantity += change;
     saveCart(cart);
-    renderCartItems(); // Re-render to update pricing & counts
+    renderCart();
   }
 }
 
-// Handle removing items
-cartItemsContainer.addEventListener('click', e => {
-  if (e.target.classList.contains('remove-btn')) {
-    const itemDiv = e.target.closest('.cart-item');
-    const id = itemDiv.dataset.id;
-    const size = itemDiv.dataset.size;
-    const color = itemDiv.dataset.color;
-
-    removeCartItem(id, size, color);
-  }
-});
-
-// Remove item from cart
-function removeCartItem(id, size, color) {
-  let cart = loadCart();
-
-  cart = cart.filter(item => !(item.id === id && item.size === size && item.color === color));
-
+// Remove Item
+function removeItem(index) {
+  let cart = getCart();
+  cart.splice(index, 1); // remove item
   saveCart(cart);
-  renderCartItems();
+  renderCart();
 }
 
 // Proceed to checkout click handler
@@ -161,6 +110,6 @@ checkoutBtn.addEventListener('click', () => {
 
 // Initial render on page load
 document.addEventListener('DOMContentLoaded', () => {
-  renderCartItems();
+  renderCart();
   updateCartCount();
 });

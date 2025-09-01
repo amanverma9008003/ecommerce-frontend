@@ -1,49 +1,80 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Login - ShopEase</title>
-  <link rel="stylesheet" href="styles/main.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - MyShop</title>
+  <link rel="stylesheet" href="styles/style.css">
 </head>
+<!-- Firebase SDK -->
+<script type="module">
+  // Import Firebase
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
+  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } 
+    from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
+
+  // Your Firebase config (replace with your project’s keys)
+  const firebaseConfig = {
+  apiKey: "AIzaSyBAv01ffY7YdqTK0pTLNEFTaMHhtk2RK1c",
+  authDomain: "e-buy-3cf16.firebaseapp.com",
+  projectId: "e-buy-3cf16",
+  storageBucket: "e-buy-3cf16.firebasestorage.app",
+  messagingSenderId: "175016726223",
+  appId: "1:175016726223:web:e3b44b357212a87fcdb1ba",
+  measurementId: "G-ETG7LRZ4DS"
+};
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+
+  document.getElementById("loginForm").addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    const email = document.getElementById("loginEmail").value;
+    const password = document.getElementById("loginPassword").value;
+
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        document.getElementById("loginMessage").innerText = "✅ Login successful!";
+        console.log("Logged in:", userCredential.user);
+        window.location.href = "index.html"; // redirect to homepage/dashboard
+      })
+      .catch((error) => {
+        document.getElementById("loginMessage").innerText = "❌ " + error.message;
+      });
+  });
+</script>
+
 <body>
-  <!-- HEADER (reuse from index.html) -->
-  <header class="site-header"> ... </header>
+  <!-- 🔹 Navigation -->
+  <header>
+    <nav>
+      <h2>MyShop</h2>
+      <a href="index.html">Home</a>
+      <a href="cart.html">Cart</a>
+    </nav>
+  </header>
 
-  <main class="auth-container">
-    <form id="login-form" class="auth-form">
-      <h2>Sign In</h2>
-      <div class="form-group">
-        <label for="login-email">Email</label>
-        <input type="email" id="login-email" required placeholder="you@email.com" />
-        <span class="form-error" id="login-email-error"></span>
+  <!-- 🔹 Login Form -->
+  <section class="auth-container">
+    <h2>Login</h2>
+    <form id="loginForm">
+      <label>Email</label>
+      <input type="email" id="loginEmail" placeholder="Enter your email" required>
+
+      <label>Password</label>
+      <div class="password-field">
+        <input type="password" id="loginPassword" placeholder="Enter your password" required>
+        <button type="button" onclick="togglePassword('loginPassword')">👁</button>
       </div>
-      <div class="form-group">
-        <label for="login-password">Password</label>
-        <div class="password-wrapper">
-          <input type="password" id="login-password" required placeholder="••••••••" minlength="8" />
-          <button type="button" class="toggle-password" tabindex="-1">&#128065;</button>
-        </div>
-        <span class="form-error" id="login-password-error"></span>
-      </div>
-      <div class="form-extra">
-        <a href="#">Forgot Password?</a>
-      </div>
-      <button type="submit" class="btn auth-btn">Login</button>
-      <p class="switch-form">
-        Don't have an account? <a href="signup.html">Sign Up</a>
-      </p>
+
+      <a href="#">Forgot Password?</a>
+      <button type="submit">Login</button>
     </form>
-  </main>
+    <p>Don't have an account? <a href="signup.html">Sign up here</a></p>
+  </section>
 
-  <footer class="site-footer container">
-    <p>© 2025 ShopEase. All rights reserved.</p>
-  </footer>
-
-  <!-- Include your module scripts -->
-  <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app.js" type="module"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth.js" type="module"></script>
-  <script src="scripts/app.js" type="module"></script>
-  <script src="scripts/auth.js" type="module"></script>
+  <script src="scripts/auth.js"></script>
 </body>
 </html>

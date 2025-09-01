@@ -1,85 +1,62 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Product Details - ShopEase</title>
-  <link rel="stylesheet" href="styles/main.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product Detail</title>
+  <link rel="stylesheet" href="styles/main.css">
 </head>
 <body>
-
-  <!-- Header: You can reuse your existing header structure here -->
-  <header class="site-header">
-    <div class="container header-content">
-    <div class="logo">
-      <a href="index.html">ShopEase</a>
-    </div>
+  <!-- Header -->
+  <header>
     <nav class="navbar">
-      <ul class="nav-links">
-        <li><a href="index.html">Home</a></li>
-        <li><a href="#">Products</a></li>
-        <li><a href="#">About</a></li>
-        <li><a href="#">Contact</a></li>
-      </ul>
+      <h1>MyShop</h1>
+      <div class="cart"><a href="cart.html" style="text-decoration: none;">
+        🛒 <span id="cartCount">0</span>
+      </a></div>
     </nav>
-    <div class="header-actions">
-      <form class="search-form">
-        <input type="text" placeholder="Search products..." />
-        <button type="submit">🔍</button>
-      </form>
-      
-      <div class="cart">
-        <div class="cart-icon">
-          <a href="cart.html" style="text-decoration: none;">🛒</a>
-          <span class="cart-badge" id="cart-count">0</span>
-        </div>
-      </div>
+  </header>
 
-      <button class="hamburger" id="hamburger-menu" aria-label="Menu">
-        <span></span><span></span><span></span>
-      </button>
-    </div>
-  </div>
-  <a href="#" id="logout-link" style="display:none">Logout</a>
-
-    </header>
-  
-  <!-- Main Content: Product Detail Section -->
-  <main class="product-detail container" id="product-detail">
-    
-    <!-- Product info will be dynamically injected here -->
+  <!-- Product Detail Section -->
+  <main class="product-detail">
+    <div id="productDetail"></div>
+    <p id="loadingMsg">Loading product details...</p>
+    <p id="errorMsg" style="display:none; color:red;">❌ Could not load product details.</p>
   </main>
   
-  <div class="quantity-selector">
-  <button type="button" id="decrease-qty">−</button>
-  <input type="number" id="quantity-input" value="1" min="1" max="99" />
-  <button type="button" id="increase-qty">+</button>
-</div>
+  <h2 id="product-name"></h2>
+  <p id="product-price"></p>
 
-
-<div class="product-variations">
-  <label for="size-select">Size:</label>
-  <select id="size-select">
+  <div class="product-variations">
+  <label for="size">Size:</label>
+  <select id="size">
     <option value="S">Small</option>
-    <option value="M" selected>Medium</option>
+    <option value="M">Medium</option>
     <option value="L">Large</option>
   </select>
 
-  <label for="color-select">Color:</label>
-  <select id="color-select">
-    <option value="red">Red</option>
-    <option value="blue" selected>Blue</option>
-    <option value="green">Green</option>
+  <label for="color">Color:</label>
+  <select id="color">
+    <option value="Red">Red</option>
+    <option value="Blue">Blue</option>
+    <option value="Black">Black</option>
   </select>
-</div>
-<div id="loadingMessage" style="display: none;"></div>
-  <div id="product-grid"></div>
-  <!-- Optional footer -->
-  <footer class="site-footer container">
-    <p>© 2025 ShopEase. All rights reserved.</p>
+  </div>
+  
+  <div class="quantity-selector">
+  <button id="decrease">−</button>
+  <input type="number" id="quantity" value="1" min="1" max="10">
+  <button id="increase">+</button>
+  </div>
+  
+  <button id="addToCart">Add to Cart</button>
+  <p id="cartMessage" style="color: green; display: none;">✅ Added to Cart!</p>
+
+  <!-- Footer -->
+  <footer>
+    <p>© 2025 MyShop. All rights reserved.</p>
   </footer>
 
-  <script src="scripts/app.js" type="module"></script>
-  <script src="scripts/product.js" type="module"></script> <!-- New JS file for product detail logic -->
+  <script src="scripts/product.js"></script>
 </body>
 </html>
